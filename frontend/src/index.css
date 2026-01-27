@@ -1,0 +1,97 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        /* Custom Palette Mapping to Shadcn Variables */
+
+        /* Background: Alice Blue */
+        --background: 210 60% 96%;
+        /* #edf5fc - HSL approx */
+        --foreground: 180 7% 16%;
+        /* #272d2d - Charcoal */
+
+        /* Card: White or extremely light Alice Blue */
+        --card: 0 0% 100%;
+        --card-foreground: 180 7% 16%;
+
+        /* Popover */
+        --popover: 0 0% 100%;
+        --popover-foreground: 180 7% 16%;
+
+        /* Primary: Emerald */
+        --primary: 145 71% 47%;
+        /* #23ce6b */
+        --primary-foreground: 0 0% 100%;
+
+        /* Secondary: Lilac Ash */
+        --secondary: 277 6% 63%;
+        /* #a39ba8 */
+        --secondary-foreground: 180 7% 16%;
+
+        /* Muted: Pale Slate */
+        --muted: 214 26% 78%;
+        /* #b8c5d6 */
+        --muted-foreground: 215 16% 47%;
+
+        /* Accent: Pale Slate Light? Keeping consistent with muted for now or defining new */
+        --accent: 214 26% 78%;
+        --accent-foreground: 180 7% 16%;
+
+        /* Destructive */
+        --destructive: 0 84.2% 60.2%;
+        --destructive-foreground: 210 40% 98%;
+
+        --border: 214 26% 78%;
+        /* Pale Slate */
+        --input: 214 26% 78%;
+        --ring: 145 71% 47%;
+        /* Emerald */
+
+        --radius: 0.5rem;
+    }
+
+    .dark {
+        /* Dark Mode mapping if needed, using Charcoal as background */
+        --background: 180 7% 16%;
+        /* #272d2d */
+        --foreground: 210 60% 96%;
+        /* #edf5fc */
+
+        --card: 180 7% 16%;
+        --card-foreground: 210 60% 96%;
+
+        --popover: 180 7% 16%;
+        --popover-foreground: 210 60% 96%;
+
+        --primary: 145 71% 47%;
+        --primary-foreground: 0 0% 100%;
+
+        --secondary: 277 6% 63%;
+        --secondary-foreground: 0 0% 100%;
+
+        --muted: 217.2 32.6% 17.5%;
+        --muted-foreground: 215 20.2% 65.1%;
+
+        --accent: 217.2 32.6% 17.5%;
+        --accent-foreground: 210 40% 98%;
+
+        --destructive: 0 62.8% 30.6%;
+        --destructive-foreground: 210 40% 98%;
+
+        --border: 217.2 32.6% 17.5%;
+        --input: 217.2 32.6% 17.5%;
+        --ring: 145 71% 47%;
+    }
+}
+
+@layer base {
+    * {
+        @apply border-border;
+    }
+
+    body {
+        @apply bg-background text-foreground;
+    }
+}
