@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import LoginPage from "./pages/LoginPage";
 import PersonalPage from "./pages/PersonalPage";
+import JugadoresPage from "./pages/JugadoresPage";
 import { Button } from "@/components/ui/button";
 
 const ProtectedRoute = ({ children }) => {
@@ -42,6 +43,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <PersonalPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/jugadores"
+            element={
+              <ProtectedRoute>
+                <JugadoresPage />
               </ProtectedRoute>
             }
           />

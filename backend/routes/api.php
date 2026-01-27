@@ -15,4 +15,8 @@ use App\Http\Controllers\PersonalController;
 $router->get('/api/personal', [PersonalController::class, 'index']);
 $router->post('/api/personal', [PersonalController::class, 'store']);
 
+use App\Http\Controllers\JugadorController;
+$router->get('/api/jugadores', [JugadorController::class, 'index']);
+$router->post('/api/jugadores', [JugadorController::class, 'store']);
+
 return $router;
