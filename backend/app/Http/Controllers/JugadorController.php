@@ -61,7 +61,11 @@ class JugadorController extends Controller
 
         $insertData = [];
         foreach ($fillable as $field) {
-            $insertData[$field] = $data[$field] ?? null;
+            if ($field === 'habilidades' && isset($data[$field]) && is_array($data[$field])) {
+                $insertData[$field] = json_encode($data[$field]);
+            } else {
+                $insertData[$field] = $data[$field] ?? null;
+            }
         }
 
         try {
@@ -80,6 +84,7 @@ class JugadorController extends Controller
             if (strpos($e->getMessage(), 'Duplicate entry') !== false) {
                 return $this->json(['error' => 'La cédula ya existe.'], 409);
             }
+            error_log("Error creating player: " . $e->getMessage());
             return $this->json(['error' => 'Error al registrar jugador.'], 500);
         }
     }
@@ -123,7 +128,11 @@ class JugadorController extends Controller
         $updateData = [];
         foreach ($fillable as $field) {
             if (array_key_exists($field, $data)) {
-                $updateData[$field] = $data[$field];
+                if ($field === 'habilidades' && is_array($data[$field])) {
+                    $updateData[$field] = json_encode($data[$field]);
+                } else {
+                    $updateData[$field] = $data[$field];
+                }
             }
         }
 
