@@ -27,8 +27,8 @@ class JugadorController extends Controller
         $validator = new Validator();
         if (
             !$validator->validate($data, [
-                'nombre' => 'required',
-                'apellido' => 'required',
+                'primer_nombre' => 'required',
+                'primer_apellido' => 'required',
                 'fecha_nacimiento' => 'required', // YYYY-MM-DD
                 'cedula' => 'required|min:5'
             ])
@@ -38,8 +38,6 @@ class JugadorController extends Controller
 
         // Prepare data with optional fields
         $fillable = [
-            'nombre',
-            'apellido',
             'primer_nombre',
             'segundo_nombre',
             'primer_apellido',
@@ -101,8 +99,6 @@ class JugadorController extends Controller
 
         // ... existing fillable logic ...
         $fillable = [
-            'nombre',
-            'apellido',
             'primer_nombre',
             'segundo_nombre',
             'primer_apellido',

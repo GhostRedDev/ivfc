@@ -27,7 +27,7 @@ class Categoria extends Model
             FROM jugadores j
             JOIN categoria_jugador cj ON j.id = cj.jugador_id
             WHERE cj.categoria_id = :id AND j.activo = 1
-            ORDER BY j.apellido ASC
+            ORDER BY j.primer_apellido ASC
         ");
         $stmt->execute(['id' => $categoriaId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -61,7 +61,7 @@ class Categoria extends Model
             WHERE YEAR(fecha_nacimiento) BETWEEN :start AND :end 
             AND activo = 1
             AND id NOT IN (SELECT jugador_id FROM categoria_jugador WHERE categoria_id = :catId)
-            ORDER BY apellido ASC
+            ORDER BY primer_apellido ASC
         ");
         $stmt->execute([
             'start' => $startYear,

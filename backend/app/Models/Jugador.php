@@ -20,7 +20,7 @@ class Jugador extends Model
             LEFT JOIN categoria_jugador cj ON j.id = cj.jugador_id
             LEFT JOIN categorias c ON cj.categoria_id = c.id
             LEFT JOIN documentos d ON j.id = d.jugador_id AND d.tipo = 'foto'
-            ORDER BY j.apellido ASC
+            ORDER BY j.primer_apellido ASC
         ";
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
