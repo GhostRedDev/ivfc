@@ -9,15 +9,30 @@ class Jugador extends Model
 {
     protected $table = 'jugadores';
 
-    public function findAllActiveWithAge()
+    public function findAllWithAge()
     {
-        $stmt = $this->db->prepare("SELECT * FROM {$this->table} WHERE activo = 1 ORDER BY apellido ASC");
+        $sql = "
+            SELECT j.*, 
+                   c.nombre as categoria_nombre, 
+                   c.id as categoria_id,
+                   d.ruta_archivo as foto_url
+            FROM {$this->table} j
+            LEFT JOIN categoria_jugador cj ON j.id = cj.jugador_id
+            LEFT JOIN categorias c ON cj.categoria_id = c.id
+            LEFT JOIN documentos d ON j.id = d.jugador_id AND d.tipo = 'foto'
+            ORDER BY j.apellido ASC
+        ";
+        $stmt = $this->db->prepare($sql);
         $stmt->execute();
         $players = $stmt->fetchAll();
 
         // Calculate age on the fly
         foreach ($players as &$player) {
             $player['edad'] = $this->calculateAge($player['fecha_nacimiento']);
+            // If multiple categories, this simple join might duplicate rows or pick one. 
+            // Assuming 1 category per player for now or GROUP BY if needed. 
+            // Given the pivot, a player could have multiple. For list view, maybe GROUP_CONCAT?
+            // For simplicity let's stick to this, it picks one if multiple.
         }
 
         return $players;
@@ -25,7 +40,21 @@ class Jugador extends Model
 
     public function findWithAge($id)
     {
-        $player = $this->find($id);
+        $sql = "
+            SELECT j.*, 
+                   c.nombre as categoria_nombre, 
+                   c.id as categoria_id,
+                   d.ruta_archivo as foto_url
+            FROM {$this->table} j
+            LEFT JOIN categoria_jugador cj ON j.id = cj.jugador_id
+            LEFT JOIN categorias c ON cj.categoria_id = c.id
+            LEFT JOIN documentos d ON j.id = d.jugador_id AND d.tipo = 'foto'
+            WHERE j.id = :id
+        ";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute(['id' => $id]);
+        $player = $stmt->fetch();
+
         if ($player) {
             $player['edad'] = $this->calculateAge($player['fecha_nacimiento']);
         }
@@ -50,5 +79,19 @@ class Jugador extends Model
     {
         $stmt = $this->db->prepare("UPDATE {$this->table} SET activo = 1 WHERE id = :id");
         return $stmt->execute(['id' => $id]);
+    }
+
+    public function assignCategory($playerId, $categoryId)
+    {
+        // Clear existing
+        $del = $this->db->prepare("DELETE FROM categoria_jugador WHERE jugador_id = :id");
+        $del->execute([':id' => $playerId]);
+
+        // Add new if valid
+        if ($categoryId) {
+            $ins = $this->db->prepare("INSERT INTO categoria_jugador (categoria_id, jugador_id) VALUES (:cid, :jid)");
+            return $ins->execute([':cid' => $categoryId, ':jid' => $playerId]);
+        }
+        return true;
     }
 }

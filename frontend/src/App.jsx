@@ -3,7 +3,15 @@ import { AuthProvider, useAuth } from "./context/AuthContext";
 import LoginPage from "./pages/LoginPage";
 import PersonalPage from "./pages/PersonalPage";
 import JugadoresPage from "./pages/JugadoresPage";
-import { Button } from "@/components/ui/button";
+import CategoriasPage from "./pages/CategoriasPage";
+import EquiposPage from "./pages/EquiposPage";
+import CampeonatosPage from "./pages/CampeonatosPage";
+import UniformesPage from "./pages/UniformesPage";
+import PagosPage from "./pages/PagosPage";
+import EntrenamientosPage from "./pages/EntrenamientosPage";
+import DocumentacionPage from "./pages/DocumentacionPage";
+import Layout from "./components/Layout";
+import DashboardPage from "./pages/DashboardPage";
 
 const ProtectedRoute = ({ children }) => {
   const { token } = useAuth();
@@ -13,47 +21,29 @@ const ProtectedRoute = ({ children }) => {
   return children;
 };
 
-const Dashboard = () => {
-  const { logout } = useAuth();
-  return (
-    <div className="p-8 bg-alice-blue min-h-screen">
-      <h1 className="text-3xl font-bold text-charcoal mb-4">Dashboard</h1>
-      <p className="mb-4 text-lilac-ash">Bienvenido al sistema del Club Internacional Valencia F.C.</p>
-      <Button onClick={logout} variant="destructive">Cerrar Sesión</Button>
-    </div>
-  )
-}
-
 function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
-          <Route
-            path="/"
-            element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/personal"
-            element={
-              <ProtectedRoute>
-                <PersonalPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/jugadores"
-            element={
-              <ProtectedRoute>
-                <JugadoresPage />
-              </ProtectedRoute>
-            }
-          />
+
+          <Route element={
+            <ProtectedRoute>
+              <Layout />
+            </ProtectedRoute>
+          }>
+            <Route path="/" element={<DashboardPage />} />
+            <Route path="/personal" element={<PersonalPage />} />
+            <Route path="/jugadores" element={<JugadoresPage />} />
+            <Route path="/categorias" element={<CategoriasPage />} />
+            <Route path="/equipos" element={<EquiposPage />} />
+            <Route path="/campeonatos" element={<CampeonatosPage />} />
+            <Route path="/uniformes" element={<UniformesPage />} />
+            <Route path="/pagos" element={<PagosPage />} />
+            <Route path="/entrenamientos" element={<EntrenamientosPage />} />
+            <Route path="/documentacion" element={<DocumentacionPage />} />
+          </Route>
         </Routes>
       </BrowserRouter>
     </AuthProvider>

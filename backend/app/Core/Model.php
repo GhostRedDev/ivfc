@@ -62,4 +62,19 @@ class Model
         $stmt = $this->db->prepare("DELETE FROM {$this->table} WHERE id = :id");
         return $stmt->execute(['id' => $id]);
     }
+
+    public function beginTransaction()
+    {
+        return $this->db->beginTransaction();
+    }
+
+    public function commit()
+    {
+        return $this->db->commit();
+    }
+
+    public function rollBack()
+    {
+        return $this->db->rollBack();
+    }
 }

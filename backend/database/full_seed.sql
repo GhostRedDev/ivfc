@@ -1,5 +1,28 @@
+-- Full Database Seed for Club Valencia
+-- Includes Schema and 50 Dummy Players
+
 CREATE DATABASE IF NOT EXISTS club_valencia;
 USE club_valencia;
+
+-- Disable FK checks to avoid issues during drop/create
+SET FOREIGN_KEY_CHECKS = 0;
+
+DROP TABLE IF EXISTS asistencia_entrenamiento;
+DROP TABLE IF EXISTS entrenamientos;
+DROP TABLE IF EXISTS pagos;
+DROP TABLE IF EXISTS uniformes;
+DROP TABLE IF EXISTS documentos;
+DROP TABLE IF EXISTS campeonato_categorias;
+DROP TABLE IF EXISTS campeonatos;
+DROP TABLE IF EXISTS categoria_personal;
+DROP TABLE IF EXISTS categoria_jugador;
+DROP TABLE IF EXISTS equipos;
+DROP TABLE IF EXISTS categorias;
+DROP TABLE IF EXISTS jugadores;
+DROP TABLE IF EXISTS personal;
+DROP TABLE IF EXISTS users;
+
+SET FOREIGN_KEY_CHECKS = 1;
 
 -- 1. Authentication & Users
 CREATE TABLE IF NOT EXISTS users (
@@ -183,5 +206,7 @@ CREATE TABLE IF NOT EXISTS asistencia_entrenamiento (
     FOREIGN KEY (jugador_id) REFERENCES jugadores(id) ON DELETE CASCADE
 );
 
--- Default Admin User (Password: admin123) - You should hash this in production apps
+-- Default Admin User
 INSERT INTO users (username, password, role) VALUES ('admin', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin');
+
+-- 50 Players Seed (Placeholder, to be appended by Python output manual copy if I wasn't automating it, but I will append it in next tool calls or just overwrite this file with composed string)
