@@ -23,7 +23,7 @@ class Categoria extends Model
     public function getPlayers($categoriaId)
     {
         $stmt = $this->db->prepare("
-            SELECT j.*, cj.categoria_id 
+            SELECT j.*, cj.categoria_id, cj.equipo_id
             FROM jugadores j
             JOIN categoria_jugador cj ON j.id = cj.jugador_id
             WHERE cj.categoria_id = :id AND j.activo = 1
@@ -45,7 +45,7 @@ class Categoria extends Model
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getEligiblePlayers($categoriaId)
+    public function getEligiblePlayers($categoriaId, $showAll = false)
     {
         $category = $this->find($categoriaId);
         if (!$category)
@@ -54,20 +54,24 @@ class Categoria extends Model
         $startYear = $category['anio_inicio'];
         $endYear = $category['anio_fin'];
 
-        // Logic: Players born in these years
-        // We need to extract year from fecha_nacimiento
-        $stmt = $this->db->prepare("
+        $sql = "
             SELECT * FROM jugadores 
-            WHERE YEAR(fecha_nacimiento) BETWEEN :start AND :end 
+            WHERE 1=1
+            " . ($showAll ? "" : "AND YEAR(fecha_nacimiento) BETWEEN :start AND :end") . "
             AND activo = 1
             AND id NOT IN (SELECT jugador_id FROM categoria_jugador WHERE categoria_id = :catId)
             ORDER BY primer_apellido ASC
-        ");
-        $stmt->execute([
-            'start' => $startYear,
-            'end' => $endYear,
-            'catId' => $categoriaId
-        ]);
+        ";
+
+        $stmt = $this->db->prepare($sql);
+
+        $params = ['catId' => $categoriaId];
+        if (!$showAll) {
+            $params['start'] = $startYear;
+            $params['end'] = $endYear;
+        }
+
+        $stmt->execute($params);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 

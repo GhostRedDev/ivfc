@@ -311,23 +311,30 @@ export default function EquiposPage() {
                             </h3>
                             <div className="space-y-2 overflow-y-auto flex-1 pr-2">
                                 {squadLoading ? <div className="text-center py-4 text-lilac-ash">Cargando...</div> :
-                                    eligiblePlayers
-                                        .filter(p => p.equipo_id !== selectedTeam?.id) // Exclude if already in this team
-                                        .map(p => (
-                                            <div key={p.id} className="bg-white p-3 rounded shadow-sm flex justify-between items-center border border-transparent hover:border-emerald/50 transition-colors group">
+                                    eligiblePlayers.map(p => {
+                                        const inThisTeam = p.equipo_id && p.equipo_id == selectedTeam?.id;
+                                        const inOtherTeam = p.equipo_id && p.equipo_id != selectedTeam?.id;
+
+                                        return (
+                                            <div key={p.id} className={`bg-white p-3 rounded shadow-sm flex justify-between items-center border ${inThisTeam ? 'border-emerald/50 bg-emerald/5' : 'border-transparent'} hover:border-emerald/50 transition-colors group`}>
                                                 <div>
                                                     <p className="font-medium text-sm text-charcoal">{p.nombre} {p.apellido}</p>
                                                     <p className="text-xs text-lilac-ash">
-                                                        {p.equipo_id ? `En otro equipo (ID: ${p.equipo_id})` : "Sin equipo"}
+                                                        {inThisTeam ? <span className="text-emerald font-bold">En este equipo</span> :
+                                                            inOtherTeam ? `En otro equipo (ID: ${p.equipo_id})` : "Sin equipo"}
                                                     </p>
                                                 </div>
-                                                <Button size="sm" variant="ghost" className="h-8 w-8 p-0" onClick={() => handleAssignPlayer(p.id)}>
-                                                    <UserPlus className="h-4 w-4 text-lilac-ash group-hover:text-emerald transition-colors" />
-                                                </Button>
+                                                {!inThisTeam && (
+                                                    <Button size="sm" variant="ghost" className="h-8 w-8 p-0" onClick={() => handleAssignPlayer(p.id)}>
+                                                        <UserPlus className="h-4 w-4 text-lilac-ash group-hover:text-emerald transition-colors" />
+                                                    </Button>
+                                                )}
                                             </div>
-                                        ))}
-                                {!squadLoading && eligiblePlayers.filter(p => p.equipo_id !== selectedTeam?.id).length === 0 && (
-                                    <div className="text-center text-lilac-ash text-sm py-8">No hay jugadores disponibles</div>
+                                        )
+                                    })
+                                }
+                                {!squadLoading && eligiblePlayers.length === 0 && (
+                                    <div className="text-center text-lilac-ash text-sm py-8">No hay jugadores en la categoría</div>
                                 )}
                             </div>
                         </div>

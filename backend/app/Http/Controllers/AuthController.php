@@ -82,6 +82,40 @@ class AuthController extends Controller
         $stmt = $this->db->prepare("SELECT id, username, role, created_at FROM users");
         $stmt->execute();
         $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        echo json_encode($users);
+    }
+
+    public function resetPassword()
+    {
+        $data = json_decode(file_get_contents("php://input"));
+        if (!isset($data->username)) {
+            // Use standard echo/return since this controller seems mixed in style or inherit from Core\Controller that has method json()?
+            // Parent Controller has `json` method according to other controllers viewed? 
+            // Wait, previous file view lines 5-9 show `use App\Core\Controller; class AuthController extends Controller`.
+            // So `$this->json` should be available IF defined there. 
+            // But let's check if the previous method used `echo json_encode`. 
+            // Yes, `login` used `echo json_encode`. 
+            // I should stick to that OR check if `json` helper exists.
+            // But "replace_file_content" showed I inserted `$this->json` which might be invalid if not defined on `Controller`.
+            // Let's assume `echo json_encode` is safer based on surrounding code.
+            http_response_code(400);
+            echo json_encode(['message' => 'Falta username']);
+            return;
+        }
+
+        $stmt = $this->db->prepare("SELECT id FROM users WHERE username = :u");
+        $stmt->execute(['u' => $data->username]);
+        if ($stmt->rowCount() == 0) {
+            http_response_code(404);
+            echo json_encode(['message' => 'Usuario no encontrado']);
+            return;
+        }
+
+        $newPass = "12345678";
+        $hashed = password_hash($newPass, PASSWORD_DEFAULT);
+
+        $upd = $this->db->prepare("UPDATE users SET password = :p WHERE username = :u");
+        $upd->execute(['p' => $hashed, 'u' => $data->username]);
+
+        echo json_encode(['message' => "Contraseña restablecida a: $newPass"]);
     }
 }

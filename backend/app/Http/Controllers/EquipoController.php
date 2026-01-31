@@ -90,4 +90,24 @@ class EquipoController extends Controller
 
         return $this->json(['error' => 'Upload failed'], 500);
     }
+    public function addPlayer($id)
+    {
+        $data = json_decode(file_get_contents("php://input"), true);
+        if (!isset($data['jugador_id'])) {
+            return $this->json(['error' => 'jugador_id required'], 400);
+        }
+
+        if ($this->model->addPlayer($id, $data['jugador_id'])) {
+            return $this->json(['message' => 'Jugador agregado al equipo']);
+        }
+        return $this->json(['error' => 'No se pudo agregar al jugador'], 400);
+    }
+
+    public function removePlayer($id, $jugadorId)
+    {
+        if ($this->model->removePlayer($id, $jugadorId)) {
+            return $this->json(['message' => 'Jugador removido del equipo']);
+        }
+        return $this->json(['error' => 'No se pudo remover al jugador'], 400);
+    }
 }

@@ -159,7 +159,8 @@ class CategoriaController extends Controller
 
     public function getEligiblePlayers($id)
     {
-        return $this->json($this->model->getEligiblePlayers($id));
+        $showAll = isset($_GET['all']) && $_GET['all'] == 'true';
+        return $this->json($this->model->getEligiblePlayers($id, $showAll));
     }
 
     public function assignPlayer($id)
@@ -207,5 +208,14 @@ class CategoriaController extends Controller
         $rol = $data['rol'] ?? 'Entrenador';
         $this->model->assignStaff($id, $data['personal_id'], $rol);
         return $this->json(['message' => 'Personal asignado']);
+    }
+    public function removeStaff($id)
+    {
+        $data = json_decode(file_get_contents("php://input"), true);
+        if (!isset($data['personal_id'])) {
+            return $this->json(['message' => 'Falta personal_id'], 400);
+        }
+        $this->model->removeStaff($id, $data['personal_id']);
+        return $this->json(['message' => 'Personal removido']);
     }
 }

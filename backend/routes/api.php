@@ -21,6 +21,7 @@ $router->get('/api/test', [HomeController::class, 'test']);
 // Auth Routes
 $router->post('/api/register', [AuthController::class, 'register']);
 $router->post('/api/login', [AuthController::class, 'login']);
+$router->post('/api/reset-password', [AuthController::class, 'resetPassword']);
 $router->get('/api/users', [AuthController::class, 'index']);
 
 // Personal Routes
@@ -64,8 +65,11 @@ $router->post('/api/equipos', [EquipoController::class, 'store']);
 $router->put('/api/equipos/{id}', [EquipoController::class, 'update']);
 $router->delete('/api/equipos/{id}', [EquipoController::class, 'destroy']);
 $router->post('/api/equipos/{id}/logo', [EquipoController::class, 'uploadLogo']);
+$router->post('/api/equipos/{id}/players', [EquipoController::class, 'addPlayer']);
+$router->post('/api/equipos/{id}/players/{playerId}', [EquipoController::class, 'removePlayer']); // Using POST for remove if DELETE is tricky with params, or use DELETE properly
 
 $router->post('/api/categorias/{id}/assign-staff', [CategoriaController::class, 'assignStaff']);
+$router->post('/api/categorias/{id}/remove-staff', [CategoriaController::class, 'removeStaff']);
 
 // Campeonatos Routes
 $router->get('/api/campeonatos', [CampeonatoController::class, 'index']);

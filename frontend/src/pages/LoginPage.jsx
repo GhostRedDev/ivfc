@@ -5,6 +5,13 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useNavigate } from "react-router-dom"
 import { Github, GalleryVerticalEnd } from "lucide-react"
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog"
 
 export default function LoginPage() {
     const [username, setUsername] = useState("")
@@ -88,9 +95,51 @@ export default function LoginPage() {
                             <div className="space-y-2">
                                 <div className="flex items-center justify-between">
                                     <Label htmlFor="password" className="text-white">Password</Label>
-                                    <a href="#" className="text-sm text-lilac-ash hover:text-white">
-                                        Forgot your password?
-                                    </a>
+                                    <Dialog>
+                                        <DialogTrigger asChild>
+                                            <a href="#" className="text-sm text-lilac-ash hover:text-white">
+                                                Forgot your password?
+                                            </a>
+                                        </DialogTrigger>
+                                        <DialogContent className="sm:max-w-md bg-charcoal border border-zinc-700 text-white">
+                                            <DialogHeader>
+                                                <DialogTitle>Restablecer Contraseña</DialogTitle>
+                                            </DialogHeader>
+                                            <div className="space-y-4 py-4">
+                                                <p className="text-sm text-zinc-400">
+                                                    Ingresa tu usuario. Tu contraseña será restablecida a un valor por defecto.
+                                                </p>
+                                                <div className="space-y-2">
+                                                    <Label htmlFor="reset-username">Usuario</Label>
+                                                    <Input
+                                                        id="reset-username"
+                                                        placeholder="admin"
+                                                        className="bg-zinc-800 border-zinc-700 text-white"
+                                                        onChange={(e) => window.resetUsername = e.target.value}
+                                                    />
+                                                </div>
+                                                <Button
+                                                    className="w-full bg-emerald hover:bg-emerald/90"
+                                                    onClick={async () => {
+                                                        const u = window.resetUsername;
+                                                        if (!u) return alert("Ingresa usuario");
+                                                        try {
+                                                            const res = await fetch("http://localhost:8000/api/reset-password", {
+                                                                method: "POST",
+                                                                body: JSON.stringify({ username: u })
+                                                            });
+                                                            const data = await res.json();
+                                                            alert(data.message);
+                                                        } catch (e) {
+                                                            alert("Error");
+                                                        }
+                                                    }}
+                                                >
+                                                    Restablecer
+                                                </Button>
+                                            </div>
+                                        </DialogContent>
+                                    </Dialog>
                                 </div>
                                 <Input
                                     id="password"

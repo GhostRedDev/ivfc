@@ -83,9 +83,24 @@ class Jugador extends Model
 
     public function assignCategory($playerId, $categoryId)
     {
-        // Clear existing
-        $del = $this->db->prepare("DELETE FROM categoria_jugador WHERE jugador_id = :id");
-        $del->execute([':id' => $playerId]);
+        // Check existing category
+        $check = $this->db->prepare("SELECT categoria_id, equipo_id FROM categoria_jugador WHERE jugador_id = :id");
+        $check->execute([':id' => $playerId]);
+        $existing = $check->fetch();
+
+        if ($existing) {
+            if ($existing['categoria_id'] == $categoryId) {
+                // Same category, nothing to do (preserve team)
+                return true;
+            } else {
+                // Different category, delete and insert (will clear team, which is correct as team belongs to old category)
+                $del = $this->db->prepare("DELETE FROM categoria_jugador WHERE jugador_id = :id");
+                $del->execute([':id' => $playerId]);
+            }
+        } elseif (!$categoryId) {
+            // Requesting no category? Or just clearing? The method assumes categoryId is provided to add.
+            return true;
+        }
 
         // Add new if valid
         if ($categoryId) {
