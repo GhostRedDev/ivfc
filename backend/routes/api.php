@@ -82,6 +82,7 @@ $router->post('/api/campeonatos/{id}/remove-category', [CampeonatoController::cl
 $router->delete('/api/campeonatos/{id}', [CampeonatoController::class, 'destroy']);
 
 // Documentos (Files) Routes
+$router->get('/api/documentos', [DocumentoController::class, 'indexAll']);
 $router->get('/api/jugadores/{id}/documentos', [DocumentoController::class, 'index']);
 $router->post('/api/jugadores/{id}/documentos', [DocumentoController::class, 'store']);
 $router->delete('/api/documentos/{id}', [DocumentoController::class, 'destroy']);

@@ -14,4 +14,15 @@ class Documento extends Model
         $stmt->execute(['id' => $jugadorId]);
         return $stmt->fetchAll();
     }
+
+    public function findAllWithJugador()
+    {
+        $sql = "SELECT d.*, j.nombre, j.apellido, j.cedula 
+                FROM {$this->table} d 
+                JOIN jugadores j ON d.jugador_id = j.id 
+                ORDER BY d.created_at DESC";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
 }

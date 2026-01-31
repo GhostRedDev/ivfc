@@ -19,6 +19,11 @@ class DocumentoController extends Controller
         return $this->json($this->model->findByJugador($jugadorId));
     }
 
+    public function indexAll()
+    {
+        return $this->json($this->model->findAllWithJugador());
+    }
+
     public function store($jugadorId)
     {
         if (!isset($_FILES['file'])) {
