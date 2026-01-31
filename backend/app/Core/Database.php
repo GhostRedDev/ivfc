@@ -19,7 +19,9 @@ class Database
         try {
             $this->connection = new PDO($dsn, $config['username'], $config['password'], $config['options']);
         } catch (PDOException $e) {
-            die("Database connection failed: " . $e->getMessage());
+            http_response_code(500);
+            echo json_encode(["status" => "error", "message" => "Database connection failed: " . $e->getMessage()]);
+            exit;
         }
     }
 
