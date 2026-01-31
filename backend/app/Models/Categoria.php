@@ -110,4 +110,18 @@ class Categoria extends Model
         $stmt = $this->db->prepare("UPDATE {$this->table} SET activo = :active WHERE id = :id");
         return $stmt->execute(['active' => $newState, 'id' => $id]);
     }
+
+    public function findCategoryByBirthYear($birthYear)
+    {
+        // Find a category that includes this birth year
+        // Priorities: Active categories
+        $stmt = $this->db->prepare("
+            SELECT * FROM {$this->table}
+            WHERE :year BETWEEN anio_inicio AND anio_fin
+            AND activo = 1
+            LIMIT 1
+        ");
+        $stmt->execute(['year' => $birthYear]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 }
